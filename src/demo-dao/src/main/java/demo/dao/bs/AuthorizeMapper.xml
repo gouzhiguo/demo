@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="demo.dao.bs.AuthorizeMapper" >
+  <!--映射-->
+  <resultMap id="BaseResultMap" type="demo.model.table.bs.BsAuthorize" >
+    <id column="SysNo" property="sysno" jdbcType="INTEGER" />
+    <result column="RoleSysNo" property="rolesysno" jdbcType="INTEGER" />
+    <result column="AuthorizeSysNo" property="authorizesysno" jdbcType="INTEGER" />
+    <result column="AuthorizeType" property="authorizetype" jdbcType="INTEGER" />
+  </resultMap>
+  <!--字段-->
+  <sql id="Base_Column_List" >
+    SysNo, RoleSysNo, AuthorizeSysNo, AuthorizeType
+  </sql>
+  <!--根据系统编号获取授权信息-->
+  <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bsauthorize
+    where SysNo = #{sysno,jdbcType=INTEGER}
+  </select>
+  <!--根据角色获取功能权限列表-->
+  <select id="getAuthorizeRoleSysNo" resultMap="BaseResultMap">
+    select * from bsauthorize where roleSysNo=#{roleSysNo}
+  </select>
+  <!--插入-->
+  <insert id="insert" parameterType="demo.model.table.bs.BsAuthorize" >
+    insert into bsauthorize
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sysno != null" >
+        SysNo,
+      </if>
+      <if test="rolesysno != null" >
+        RoleSysNo,
+      </if>
+      <if test="authorizesysno != null" >
+        AuthorizeSysNo,
+      </if>
+      <if test="authorizetype != null" >
+        AuthorizeType,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sysno != null" >
+        #{sysno,jdbcType=INTEGER},
+      </if>
+      <if test="rolesysno != null" >
+        #{rolesysno,jdbcType=INTEGER},
+      </if>
+      <if test="authorizesysno != null" >
+        #{authorizesysno,jdbcType=INTEGER},
+      </if>
+      <if test="authorizetype != null" >
+        #{authorizetype,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <!--更新-->
+  <update id="update" parameterType="demo.model.table.bs.BsAuthorize" >
+    update bsauthorize
+    <set >
+      <if test="rolesysno != null" >
+        RoleSysNo = #{rolesysno,jdbcType=INTEGER},
+      </if>
+      <if test="authorizesysno != null" >
+        AuthorizeSysNo = #{authorizesysno,jdbcType=INTEGER},
+      </if>
+      <if test="authorizetype != null" >
+        AuthorizeType = #{authorizetype,jdbcType=INTEGER},
+      </if>
+    </set>
+    where SysNo = #{sysno,jdbcType=INTEGER}
+  </update>
+  <!--删除角色所有数据-->
+  <delete id="deleteByRoleSysNo" parameterType="java.lang.Integer">
+    delete from bsauthorize where roleSysNo=#{roleSysNo};
+  </delete>
+    <!--批量添加-->
+  <insert id="insertByBatch" parameterType="java.util.List">
+    insert into bsauthorize (rolesysno,authorizesysno,authorizetype)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+        (#{item.rolesysno}, #{item.authorizesysno},#{item.authorizetype})
+    </foreach>
+  </insert>
+  <!--根据用户编号获取功能权限列表-->
+  <select id="getAuthorize" resultMap="BaseResultMap" parameterType="demo.model.para.bs.AuthorizePara">
+    SELECT
+    ba.*
+    FROM
+    BsRole br
+    INNER JOIN BsUserRole bur ON br.SysNo = bur.RoleSysNo
+    INNER JOIN BsAuthorize ba ON bur.RoleSysNo = ba.RoleSysNo
+    WHERE
+    br.Status=#{roleStatus}
+    AND bur.UserSysNo=#{userSysNo}
+    AND ba.AuthorizeType = #{authorizeType}
+  </select>
+</mapper>

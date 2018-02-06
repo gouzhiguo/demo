@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="demo.dao.bs.PermissionMapper" >
+  <!--映射-->
+  <resultMap id="BaseResultMap" type="demo.model.table.bs.BsPermission" >
+    <id column="SysNo" property="sysno" jdbcType="INTEGER" />
+    <result column="Name" property="name" jdbcType="VARCHAR" />
+    <result column="Code" property="code" jdbcType="VARCHAR" />
+    <result column="Description" property="description" jdbcType="VARCHAR" />
+    <result column="Status" property="status" jdbcType="INTEGER" />
+    <result column="CreatedBy" property="createdby" jdbcType="INTEGER" />
+    <result column="CreatedDate" property="createddate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!--字段-->
+  <sql id="Base_Column_List" >
+    SysNo, Name, Code, Description, Status, CreatedBy, CreatedDate
+  </sql>
+  <!--获取-->
+  <select id="get" resultType="demo.model.table.bs.BsPermission" parameterType="java.lang.Integer">
+    SELECT *  FROM bspermission WHERE sysNo = #{sysNo}
+  </select>
+  <!--获取菜单权限列表-->
+  <select id="getRolePermissionByRoleSysNo" resultType="demo.model.view.bs.MenuPermissionVo">
+    select bp.*,bmp.MenuSysNo from bsmenupermission bmp inner join bspermission bp on bmp.PermissionSysNo=bp.SysNo WHERE bmp.MenuSysNo=#{menuSysNo}
+  </select>
+  <!--权限菜单编号获取菜单权限列表-->
+  <select id="getByMenuSysNo" resultMap="BaseResultMap">
+      SELECT * FROM bspermission bp WHERE bp.sysNo in
+      (
+      SELECT bmp.PermissionSysNo FROM bsmenupermission bmp WHERE bmp.menuSysNo=#{menuSysNo}
+      )
+  </select>
+  <!--名称是否存在-->
+  <select id="getByName" resultMap="BaseResultMap">
+    SELECT count(0)  FROM bspermission
+    <where>
+      <if test="sysno !=null and sysno != ''">
+        and sysNo != #{sysno}
+      </if>
+      <if test="name !=null and name != ''">
+        and name = #{name}
+      </if>
+    </where>
+  </select>
+  <!--更新状态-->
+  <update id="updateStatus">
+    UPDATE bspermission SET status=#{status} WHERE sysNo=#{sysNo}
+  </update>
+  <!--新增-->
+  <insert id="insert" parameterType="demo.model.table.bs.BsPermission" >
+    insert into bspermission
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sysno != null" >
+        SysNo,
+      </if>
+      <if test="name != null" >
+        Name,
+      </if>
+      <if test="code != null" >
+        Code,
+      </if>
+      <if test="description != null" >
+        Description,
+      </if>
+      <if test="status != null" >
+        Status,
+      </if>
+      <if test="createdby != null" >
+        CreatedBy,
+      </if>
+      <if test="createddate != null" >
+        CreatedDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sysno != null" >
+        #{sysno,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdby != null" >
+        #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="createddate != null" >
+        #{createddate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--更新-->
+  <update id="update" parameterType="demo.model.table.bs.BsPermission" >
+    update bspermission
+    <set >
+      <if test="name != null" >
+        Name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        Code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        Description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        Status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createdby != null" >
+        CreatedBy = #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="createddate != null" >
+        CreatedDate = #{createddate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SysNo = #{sysno,jdbcType=INTEGER}
+  </update>
+  <!--分页数据-->
+  <select id="getPager" resultType="demo.model.table.bs.BsPermission" parameterType="demo.model.para.bs.PermissionQueryPara">
+    <![CDATA[SELECT * FROM bspermission]]>
+    <include refid="Where"></include>
+  </select>
+  <!--查询条件-->
+  <sql id="Where">
+    <where>
+      <if test="name != null and name != ''">
+        and name like concat(concat('%',#{name}),'%')
+      </if>
+      <if test="status != null">
+        and status = #{status}
+      </if>
+    </where>
+  </sql>
+  <!--菜单功能权限分页数据-->
+  <select id="getPermissionPager" resultMap="BaseResultMap" parameterType="demo.model.para.bs.PermissionQueryPara">
+    <![CDATA[SELECT * FROM bspermission where sysNo not in(SELECT PermissionSysNo FROM bsmenupermission)]]>
+  </select>
+  <!--获取功能权限列表-->
+  <select id="getListBySysNoList" parameterType="java.util.List" resultType="demo.model.table.bs.BsPermission">
+    <![CDATA[SELECT * FROM bspermission]]>
+    where SysNo IN
+    <foreach collection="list" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+</mapper>

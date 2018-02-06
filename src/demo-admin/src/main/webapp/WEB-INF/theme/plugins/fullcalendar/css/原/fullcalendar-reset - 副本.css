@@ -1,0 +1,35 @@
+/*calender*/
+.fc-widget-header th{
+height: 50px;
+line-height: 50px;
+text-align: center;
+background: #e4e4e4 !important;	
+}
+.fc-day-grid .fc-event{
+padding: 4px 6px;
+}
+.fc-day-grid .fc-event .fc-content .fc-time{ font-size:10px; color:#a5eeea; font-weight:normal;}
+.fc-day-grid .fc-event:hover{ color:#f1f1f1;}
+.fc-event{
+background-color: #1FB5AD !important;
+border-color: #1FB5AD !important;
+}
+.fc-unthemed .fc-today{ background-color:#f1fff0;}
+/*-------------------*/
+.drg-event-title {
+    font-weight:300;
+    margin-top:0;
+    margin-bottom:15px;
+    border-bottom:1px solid #ddd;
+    padding-bottom:10px;
+}
+.external-event {
+    cursor:move;
+    display:inline-block !important;
+    margin-bottom:6px !important;
+    margin-right:6px !important;
+    padding:8px;
+}
+#external-events p input[type="checkbox"] {
+    margin:0;
+}

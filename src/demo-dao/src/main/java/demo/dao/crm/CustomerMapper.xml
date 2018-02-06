@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="demo.dao.crm.CustomerMapper" >
+
+  <resultMap id="BaseResultMap" type="demo.model.table.crm.CrCustomer" >
+    <id column="SysNo" jdbcType="INTEGER" property="sysno" />
+    <result column="Account" jdbcType="VARCHAR" property="account" />
+    <result column="Password" jdbcType="VARCHAR" property="password" />
+    <result column="SafePassword" jdbcType="VARCHAR" property="safepassword" />
+    <result column="Email" jdbcType="VARCHAR" property="email" />
+    <result column="EmailStatus" jdbcType="INTEGER" property="emailstatus" />
+    <result column="RealName" jdbcType="VARCHAR" property="realname" />
+    <result column="Birthday" jdbcType="TIMESTAMP" property="birthday" />
+    <result column="HeadImgUrl" jdbcType="VARCHAR" property="headimgurl" />
+    <result column="PhoneNumber" jdbcType="VARCHAR" property="phonenumber" />
+    <result column="RegisterIP" jdbcType="VARCHAR" property="registerip" />
+    <result column="RegisterDate" jdbcType="TIMESTAMP" property="registerdate" />
+    <result column="LastLoginIP" jdbcType="VARCHAR" property="lastloginip" />
+    <result column="LastLoginDate" jdbcType="TIMESTAMP" property="lastlogindate" />
+    <result column="LoginCount" jdbcType="INTEGER" property="logincount" />
+    <result column="Status" jdbcType="INTEGER" property="status" />
+    <result column="CreatedDate" jdbcType="TIMESTAMP" property="createddate" />
+  </resultMap>
+  <!--字段-->
+  <sql id="Base_Column_List">
+    SysNo, Account, Password, SafePassword, Email, EmailStatus, RealName, Birthday, HeadImgUrl,
+    PhoneNumber, RegisterIP, RegisterDate, LastLoginIP, LastLoginDate, LoginCount, Status,
+    CreatedDate
+  </sql>
+  <!--获取-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from crcustomer
+    where SysNo = #{sysno,jdbcType=INTEGER}
+  </select>
+  <!--插入-->
+  <insert id="insert" parameterType="demo.model.table.crm">
+    insert into crcustomer
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sysno != null">
+        SysNo,
+      </if>
+      <if test="account != null">
+        Account,
+      </if>
+      <if test="password != null">
+        Password,
+      </if>
+      <if test="safepassword != null">
+        SafePassword,
+      </if>
+      <if test="email != null">
+        Email,
+      </if>
+      <if test="emailstatus != null">
+        EmailStatus,
+      </if>
+      <if test="realname != null">
+        RealName,
+      </if>
+      <if test="birthday != null">
+        Birthday,
+      </if>
+      <if test="headimgurl != null">
+        HeadImgUrl,
+      </if>
+      <if test="phonenumber != null">
+        PhoneNumber,
+      </if>
+      <if test="registerip != null">
+        RegisterIP,
+      </if>
+      <if test="registerdate != null">
+        RegisterDate,
+      </if>
+      <if test="lastloginip != null">
+        LastLoginIP,
+      </if>
+      <if test="lastlogindate != null">
+        LastLoginDate,
+      </if>
+      <if test="logincount != null">
+        LoginCount,
+      </if>
+      <if test="status != null">
+        Status,
+      </if>
+      <if test="createddate != null">
+        CreatedDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sysno != null">
+        #{sysno,jdbcType=INTEGER},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="safepassword != null">
+        #{safepassword,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="emailstatus != null">
+        #{emailstatus,jdbcType=INTEGER},
+      </if>
+      <if test="realname != null">
+        #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="headimgurl != null">
+        #{headimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="phonenumber != null">
+        #{phonenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="registerip != null">
+        #{registerip,jdbcType=VARCHAR},
+      </if>
+      <if test="registerdate != null">
+        #{registerdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastloginip != null">
+        #{lastloginip,jdbcType=VARCHAR},
+      </if>
+      <if test="lastlogindate != null">
+        #{lastlogindate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logincount != null">
+        #{logincount,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createddate != null">
+        #{createddate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--更新-->
+  <update id="update" parameterType="demo.model.table.crm.CrCustomer">
+    update crcustomer
+    <set>
+      <if test="account != null">
+        Account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        Password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="safepassword != null">
+        SafePassword = #{safepassword,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        Email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="emailstatus != null">
+        EmailStatus = #{emailstatus,jdbcType=INTEGER},
+      </if>
+      <if test="realname != null">
+        RealName = #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        Birthday = #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="headimgurl != null">
+        HeadImgUrl = #{headimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="phonenumber != null">
+        PhoneNumber = #{phonenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="registerip != null">
+        RegisterIP = #{registerip,jdbcType=VARCHAR},
+      </if>
+      <if test="registerdate != null">
+        RegisterDate = #{registerdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastloginip != null">
+        LastLoginIP = #{lastloginip,jdbcType=VARCHAR},
+      </if>
+      <if test="lastlogindate != null">
+        LastLoginDate = #{lastlogindate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="logincount != null">
+        LoginCount = #{logincount,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        Status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createddate != null">
+        CreatedDate = #{createddate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SysNo = #{sysno,jdbcType=INTEGER}
+  </update>
+
+</mapper>

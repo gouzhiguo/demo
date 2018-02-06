@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="demo.dao.bs.UserRoleMapper">
+  <!--映射-->
+  <resultMap id="BaseResultMap" type="demo.model.table.bs.BsUserRole">
+    <id column="SysNo" jdbcType="INTEGER" property="sysno" />
+    <result column="UserSysNo" jdbcType="INTEGER" property="usersysno" />
+    <result column="RoleSysNo" jdbcType="INTEGER" property="rolesysno" />
+    <result column="CreatedBy" jdbcType="INTEGER" property="createdby" />
+    <result column="CreatedDate" jdbcType="TIMESTAMP" property="createddate" />
+  </resultMap>
+  <!--字段-->
+  <sql id="Base_Column_List">
+    SysNo, UserSysNo, RoleSysNo, CreatedBy, CreatedDate
+  </sql>
+  <!--根据系统编号获取用户信息-->
+  <select id="get" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bsuserrole
+    where SysNo = #{sysno,jdbcType=INTEGER}
+  </select>
+  <!--插入-->
+  <insert id="insert" parameterType="demo.model.table.bs.BsUserRole">
+    insert into bsuserrole
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sysno != null">
+        SysNo,
+      </if>
+      <if test="usersysno != null">
+        UserSysNo,
+      </if>
+      <if test="rolesysno != null">
+        RoleSysNo,
+      </if>
+      <if test="createdby != null">
+        CreatedBy,
+      </if>
+      <if test="createddate != null">
+        CreatedDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sysno != null">
+        #{sysno,jdbcType=INTEGER},
+      </if>
+      <if test="usersysno != null">
+        #{usersysno,jdbcType=INTEGER},
+      </if>
+      <if test="rolesysno != null">
+        #{rolesysno,jdbcType=INTEGER},
+      </if>
+      <if test="createdby != null">
+        #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="createddate != null">
+        #{createddate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--更新-->
+  <update id="update" parameterType="demo.model.table.bs.BsUserRole">
+    update bsuserrole
+    <set>
+      <if test="usersysno != null">
+        UserSysNo = #{usersysno,jdbcType=INTEGER},
+      </if>
+      <if test="rolesysno != null">
+        RoleSysNo = #{rolesysno,jdbcType=INTEGER},
+      </if>
+      <if test="createdby != null">
+        CreatedBy = #{createdby,jdbcType=INTEGER},
+      </if>
+      <if test="createddate != null">
+        CreatedDate = #{createddate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SysNo = #{sysno,jdbcType=INTEGER}
+  </update>
+  <!--获取用户角色-->
+  <select id="getByUserSysNo" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from bsuserrole
+    where userSysNo = #{userSysNo}
+  </select>
+  <!--删除用户编号、角色编号-->
+  <delete id="deleteByUserSysNo" parameterType="java.lang.Integer">
+    delete from bsuserrole where usersysno=#{userSysNo};
+  </delete>
+  <!--批量插入-->
+  <insert id="insertByBatch" parameterType="java.util.List">
+    insert into bsuserrole (usersysno, rolesysno)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.usersysno},#{item.rolesysno})
+    </foreach>
+  </insert>
+</mapper>

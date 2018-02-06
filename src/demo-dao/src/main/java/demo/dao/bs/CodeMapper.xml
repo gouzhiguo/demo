@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="demo.dao.bs.CodeMapper" >
+
+  <resultMap id="BaseResultMap" type="ec.model.BsCode" >
+    <id column="SysNo" property="sysno" jdbcType="INTEGER" />
+    <result column="Type" property="type" jdbcType="INTEGER" />
+    <result column="Name" property="name" jdbcType="VARCHAR" />
+    <result column="Value" property="value" jdbcType="VARCHAR" />
+    <result column="Remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="Status" property="status" jdbcType="INTEGER" />
+    <result column="CreatedDate" property="createddate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <!--字段-->
+  <sql id="Base_Column_List" >
+    SysNo, Type, Name, Value, Remarks, Status, CreatedDate
+  </sql>
+  <!--获取-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bscode
+    where SysNo = #{sysno,jdbcType=INTEGER}
+  </select>
+  <!--插入-->
+  <insert id="insert" parameterType="demo.model.table.bs.BsCode" >
+    insert into bscode
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sysno != null" >
+        SysNo,
+      </if>
+      <if test="type != null" >
+        Type,
+      </if>
+      <if test="name != null" >
+        Name,
+      </if>
+      <if test="value != null" >
+        Value,
+      </if>
+      <if test="remarks != null" >
+        Remarks,
+      </if>
+      <if test="status != null" >
+        Status,
+      </if>
+      <if test="createddate != null" >
+        CreatedDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sysno != null" >
+        #{sysno,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null" >
+        #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createddate != null" >
+        #{createddate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <!--更新-->
+  <update id="update" parameterType="demo.model.table.bs.BsCode" >
+    update bscode
+    <set >
+      <if test="type != null" >
+        Type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        Name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null" >
+        Value = #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        Remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        Status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createddate != null" >
+        CreatedDate = #{createddate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SysNo = #{sysno,jdbcType=INTEGER}
+  </update>
+
+</mapper>

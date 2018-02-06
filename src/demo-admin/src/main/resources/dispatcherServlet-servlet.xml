@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+    <mvc:default-servlet-handler />
+    <context:property-placeholder location="classpath:sign.properties" file-encoding="UTF-8"/>
+    <mvc:interceptors>
+        <!-- 拦截器 -->
+        <!-- path 对所有的请求拦截使用/**，对某个模块下的请求拦截使用：/myPath/* -->
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <bean class="demo.admin.handler.AuthInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <!-- 默认的注解映射的支持 -->
+    <mvc:annotation-driven>
+        <!-- 消息转换器,设置字符编码 -->
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value="text/html;charset=UTF-8" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
+    <context:component-scan base-package="demo.admin.controller" />
+    <!-- 定义跳转的文件的前后缀 ，视图模式配置-->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="contentType" value="text/html" />
+        <property name="prefix" value="/WEB-INF/views/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+    <!-- 导入缓存配置 -->
+    <!--<import resource="spring-ehcache.xml"/>-->
+    <!-- 带进度条的文件上传 -->
+    <!-- 静态资源映射 -->
+    <mvc:resources mapping="/theme/**" location="/WEB-INF/theme/" />
+    <!--获取配置-->
+    <bean id="sign" class="demo.model.config.Sign"/>
+</beans>

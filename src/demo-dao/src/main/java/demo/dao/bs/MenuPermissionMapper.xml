@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="demo.dao.bs.MenuPermissionMapper" >
+  <!--映射-->
+  <resultMap id="BaseResultMap" type="demo.model.table.bs.BsMenuPermission" >
+    <id column="SysNo" property="sysno" jdbcType="INTEGER" />
+    <result column="PermissionSysNo" property="permissionsysno" jdbcType="INTEGER" />
+    <result column="MenuSysNo" property="menusysno" jdbcType="INTEGER" />
+  </resultMap>
+  <!--字段-->
+  <sql id="Base_Column_List" >
+    SysNo, PermissionSysNo, MenuSysNo
+  </sql>
+  <!--根据系统编号获取用户信息-->
+  <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bsmenupermission
+    where SysNo = #{sysno,jdbcType=INTEGER}
+  </select>
+  <!--根据菜单编号删除菜单权限-->
+  <delete id="deleteByMenuSysNo">
+    delete from bsmenupermission where menuSysNo=#{menuSysNo};
+  </delete>
+  <!--批量插入菜单权限-->
+  <insert id="insertByBatch" parameterType="java.util.List">
+    insert into bsmenupermission (PermissionSysNo,MenuSysNo)
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.permissionsysno},#{item.menusysno})
+    </foreach>
+  </insert>
+
+  <!--插入-->
+  <insert id="insert" parameterType="demo.model.table.bs.BsMenuPermission" >
+    insert into bsmenupermission
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sysno != null" >
+        SysNo,
+      </if>
+      <if test="permissionsysno != null" >
+        PermissionSysNo,
+      </if>
+      <if test="menusysno != null" >
+        MenuSysNo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sysno != null" >
+        #{sysno,jdbcType=INTEGER},
+      </if>
+      <if test="permissionsysno != null" >
+        #{permissionsysno,jdbcType=INTEGER},
+      </if>
+      <if test="menusysno != null" >
+        #{menusysno,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <!--更新-->
+  <update id="update" parameterType="demo.model.table.bs.BsMenuPermission" >
+    update bsmenupermission
+    <set >
+      <if test="permissionsysno != null" >
+        PermissionSysNo = #{permissionsysno,jdbcType=INTEGER},
+      </if>
+      <if test="menusysno != null" >
+        MenuSysNo = #{menusysno,jdbcType=INTEGER},
+      </if>
+    </set>
+    where SysNo = #{sysno,jdbcType=INTEGER}
+  </update>
+
+  <!--映射-->
+  <resultMap id="MenuPermissionVoResultMap" type="demo.model.view.bs.MenuPermissionVo" >
+    <id column="SysNo" property="sysno" jdbcType="INTEGER" />
+    <result column="Name" property="name" jdbcType="VARCHAR" />
+    <result column="Code" property="code" jdbcType="VARCHAR" />
+    <result column="Description" property="description" jdbcType="VARCHAR" />
+    <result column="Status" property="status" jdbcType="INTEGER" />
+    <result column="CreatedBy" property="createdby" jdbcType="INTEGER" />
+    <result column="CreatedDate" property="createddate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <select id="getMenuPermissionList" resultMap="MenuPermissionVoResultMap">
+    select bp.*,bmp.MenuSysNo from bsmenupermission bmp inner join bspermission bp on bmp.PermissionSysNo=bp.SysNo
+  </select>
+</mapper>
