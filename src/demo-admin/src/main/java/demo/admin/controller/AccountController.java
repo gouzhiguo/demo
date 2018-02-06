@@ -38,21 +38,6 @@ public class AccountController {
      */
     @Autowired
     private UserService userService;
-    /**
-     * 用户
-     */
-    @Autowired
-    private AuthorizeService authorizeService;
-    /**
-     * 用户
-     */
-    @Autowired
-    private PermissionService permissionService;
-    /**
-     * 缓存
-     */
-    @Autowired
-    private EhcacheService ehcacheService;
 
     /**
      * 登录
@@ -72,6 +57,7 @@ public class AccountController {
     @RequestMapping(value = "/userLogin",method = {RequestMethod.POST})
     @ResponseBody
     public JResult login(LoginPara para,HttpServletResponse response){
+
         JResult result = new JResult();
         result.setStatus(false);
 
@@ -96,7 +82,9 @@ public class AccountController {
             result.setMessage(ex.getMessage());
             ex.printStackTrace();
         }
+
         return result;
+
     }
 
     /**

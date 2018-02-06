@@ -4,11 +4,13 @@ import demo.auth.AuthCode;
 import demo.auth.CheckAuth;
 import demo.core.CookieUtil;
 import demo.core.JsonUtil;
+import demo.model.JResult;
 import demo.model.output.bs.auth.TicketUser;
 import demo.service.interfaces.bs.UserService;
 import demo.service.interfaces.core.EhcacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.annotation.Resource;
@@ -41,12 +43,17 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception{
         if (handler instanceof HandlerMethod){
             HandlerMethod headler = (HandlerMethod) handler;
+            System.out.println("当前执行的对象是"+headler.getMethod());
+
+            String m = request.getMethod();
+
             CheckAuth checkAuth = headler.getMethodAnnotation(CheckAuth.class);
             if (null != checkAuth) {
                 //用户编号
                 String sysno = CookieUtil.getCookie(request,"sysno");
                 if(null==sysno){
                     //TODO
+                    response.sendError(403,"权限不足");
                 }
                 if(checkAuth.authCode()!=null && checkAuth.authCode().length>0){
                     //将接收的权限写入List<String>
@@ -54,12 +61,29 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                     for(AuthCode item:checkAuth.authCode()){
                         authCode.add(item.getIndex());
                     }
+
                     //验证
-                    if(this.checkAuth(authCode,Integer.parseInt(sysno))){
-                        System.out.println(checkAuth.authCode());
+                    boolean checkResult = this.checkAuth(authCode,Integer.parseInt(sysno));
+                    if(request.getMethod().equals("POST")){
+                        if(checkResult){
+                            return true;
+                        }else{
+                            JResult result = new JResult();
+                            result.setStatus(false);
+                            result.setMessage("对不起，权限不足");
+                            String json = JsonUtil.objToJson(result);
+                            response.setCharacterEncoding("UTF-8");
+                            response.setContentType("application/json; charset=utf-8");
+                            response.getWriter().write(json);
+                        }
                     }else{
-                        return false;
+                        if(checkResult){
+                            return true;
+                        }else{
+                            response.sendError(403,"权限不足");
+                        }
                     }
+
                 }else{
                     return false;
                 }
