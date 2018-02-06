@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="demo.dao.bs.CodeMapper" >
 
-  <resultMap id="BaseResultMap" type="ec.model.BsCode" >
+  <resultMap id="BaseResultMap" type="demo.model.table.bs.BsCode" >
     <id column="SysNo" property="sysno" jdbcType="INTEGER" />
     <result column="Type" property="type" jdbcType="INTEGER" />
     <result column="Name" property="name" jdbcType="VARCHAR" />

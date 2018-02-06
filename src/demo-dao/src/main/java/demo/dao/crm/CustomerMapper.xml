@@ -35,7 +35,7 @@
     where SysNo = #{sysno,jdbcType=INTEGER}
   </select>
   <!--插入-->
-  <insert id="insert" parameterType="demo.model.table.crm">
+  <insert id="insert" parameterType="demo.model.table.crm.CrCustomer">
     insert into crcustomer
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="sysno != null">
