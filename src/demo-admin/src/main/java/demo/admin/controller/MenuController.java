@@ -1,6 +1,8 @@
 package demo.admin.controller;
 
 import com.github.pagehelper.Page;
+import demo.auth.AuthCode;
+import demo.auth.CheckAuth;
 import demo.model.JResult;
 import demo.model.JResultT;
 import demo.model.enums.IsNavEnum;
@@ -41,6 +43,7 @@ public class MenuController {
      * @author 苟治国 创建
      */
     @RequestMapping("index")
+    @CheckAuth(authCode= {AuthCode.Menu0001})
     public String index(Model model){
         model.addAttribute("statusEnum", StatusEnum.getStatusMap());
         model.addAttribute("isNavEnum", IsNavEnum.getStatusMap());
@@ -55,6 +58,7 @@ public class MenuController {
      */
     @RequestMapping(value = "getMenuBySysNo",method = {RequestMethod.POST})
     @ResponseBody
+    @CheckAuth(authCode= {AuthCode.Menu0001})
     public JResultT<MenuVo> getMenuBySysNo(@RequestParam(value = "sysNo") Integer sysNo){
         return menuService.getMenuBySysNo(sysNo);
     }
@@ -66,6 +70,7 @@ public class MenuController {
      */
     @RequestMapping(value = "getMenuParentSysNo",method = {RequestMethod.POST})
     @ResponseBody
+    @CheckAuth(authCode= {AuthCode.Menu0001})
     public JResultT<List<ZtreeNodesVo>> getMenuParentSysNo(Integer parentSysNo){
         return menuService.getMenuParentSysNo(parentSysNo);
     }
@@ -75,6 +80,7 @@ public class MenuController {
      * @return
      * @author 苟治国 创建
      */
+    @CheckAuth(authCode= {AuthCode.Menu0001})
     @RequestMapping(value = "getMenuList",method = {RequestMethod.POST})
     @ResponseBody
     public List<ZtreeNodesVo> getMenuList(){
@@ -88,6 +94,7 @@ public class MenuController {
      * @author 苟治国 创建
      */
     @RequestMapping("permission")
+    @CheckAuth(authCode= {AuthCode.Menu0001})
     public String permission(@RequestParam("menuSysNo") Integer menuSysNo,Model model){
 
         model.addAttribute("menuSysNo",menuSysNo);
@@ -101,6 +108,7 @@ public class MenuController {
      * @author 苟治国 创建
      */
     @RequestMapping("permissionQuery")
+    @CheckAuth(authCode= {AuthCode.Menu0001})
     public String permissionQuery(PermissionQueryPara para, HttpServletRequest request, Model model){
 
         para.setPageIndex(Integer.parseInt(request.getParameter("pageIndex")));
@@ -120,6 +128,7 @@ public class MenuController {
      * @author 苟治国 创建
      */
     @RequestMapping("saveMenu")
+    @CheckAuth(authCode= {AuthCode.Menu0002})
     public @ResponseBody JResult saveMenu(SaveMenuPara para){
         JResult result = new JResult();
         result.setStatus(false);

@@ -1,4 +1,3 @@
-/*
 package demo.core;
 
 import com.alibaba.fastjson.JSON;
@@ -6,12 +5,10 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-*/
 /**
  *  redis工具类
  *  @author 苟治国
- *//*
-
+ */
 public class RedisUtil {
     //Redis服务器IP
     private static String HOST = "127.0.0.1";
@@ -23,23 +20,16 @@ public class RedisUtil {
     private static String PASSWORD = "";
     //创建连接池
     private static JedisPool jedisPool=null;
-
     //定义静态方法
     private static RedisUtil instance;
 
-    */
-/**
+    /**
      * 定义私有构造方法、防止实例化
-     *//*
-
+     */
     private RedisUtil(){
     }
 
-    */
-/**
-     * 定义静态方法、调用时再初始化类
-     *//*
-
+    //定义静态方法、调用时再初始化类
     public static RedisUtil getInstance(){
         // 对象实例化时与否判断（不使用同步代码块，instance不等于null时，直接返回对象，提高运行效率）
         if (instance == null){
@@ -53,11 +43,9 @@ public class RedisUtil {
         return instance;
     }
 
-    */
-/**
+    /**
      * 初始化Redis连接池
-     *//*
-
+     */
     static {
         try {
             JedisPoolConfig config = new JedisPoolConfig();
@@ -76,12 +64,10 @@ public class RedisUtil {
         }
     }
 
-    */
-/**
+    /**
      * 获取Jedis实例
      * @return
-     *//*
-
+     */
     public synchronized static Jedis getJedis(){
         try {
             if(jedisPool!=null){
@@ -96,23 +82,19 @@ public class RedisUtil {
         }
     }
 
-    */
-/**
+    /**
      * 释放jedis资源
      * @param jedis
-     *//*
-
+     */
     public static void returnResource(final Jedis jedis){
         if(jedis!=null){
             jedisPool.returnResourceObject(jedis);
         }
     }
 
-    */
-/**
+    /**
      * 设置
-     *//*
-
+     */
     public void set(String key,Object object,int expire){
         Jedis jedis = null;
         try{
@@ -132,11 +114,9 @@ public class RedisUtil {
         }
     }
 
-    */
-/**
+    /**
      * 获取
-     *//*
-
+     */
     public Object get(String key){
         Jedis jedis = null;
         try{
@@ -153,11 +133,9 @@ public class RedisUtil {
         return null;
     }
 
-    */
-/**
+    /**
      * 获取
-     *//*
-
+     */
     public <T> T get(String key,Class<T> classs){
         Jedis jedis = null;
         try{
@@ -179,11 +157,9 @@ public class RedisUtil {
         return null;
     }
 
-    */
-/**
+    /**
      * 是否存在
-     *//*
-
+     */
     public boolean exists(String key){
         Jedis jedis = null;
         try{
@@ -201,11 +177,9 @@ public class RedisUtil {
         return false;
     }
 
-    */
-/**
+    /**
      * 删除
-     *//*
-
+     */
     public void delete(String key){
         Jedis jedis = null;
         try{
@@ -222,4 +196,3 @@ public class RedisUtil {
         }
     }
 }
-*/

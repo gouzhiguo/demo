@@ -2,7 +2,9 @@ package demo.admin.controller;
 
 import demo.core.CookieUtil;
 import demo.core.JsonUtil;
+import demo.core.MD5Util;
 import demo.model.JResult;
+import demo.model.output.bs.auth.Ticket;
 import demo.model.output.bs.auth.TicketUser;
 import demo.model.para.bs.AuthorizePara;
 import demo.model.para.bs.LoginPara;
@@ -25,7 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Administrator on 2017/12/13.
+ * 登录、注销控制器
+ * @author 苟治国 创建
  */
 @Controller
 @RequestMapping("/account")
@@ -77,35 +80,15 @@ public class AccountController {
             if(null==user){
                 throw new Exception("用户不存在");
             }
-            TicketUser ticketUser = new TicketUser();
-            ticketUser.setSysNo(user.getSysno());
-            ticketUser.setAccount(user.getAccount());
-            ticketUser.setName(user.getName());
-            //获取授权
-            AuthorizePara authorizePara = new AuthorizePara();
-            authorizePara.setUserSysNo(user.getSysno());
-            authorizePara.setRoleStatus(1);
-            authorizePara.setAuthorizeType(20);
-            List<BsAuthorize> authorizes = authorizeService.getAuthorize(authorizePara);
-            if(null!=authorizes && authorizes.size()>0){
-                //获取功能权限
-                List<Integer> authorizeSysNoList = new ArrayList<Integer>();
-                for (BsAuthorize item:authorizes) {
-                    authorizeSysNoList.add(item.getAuthorizesysno());
-                }
+            Ticket ticket = new Ticket();
+            ticket.setSysNo(user.getSysno());
+            ticket.setAccount(user.getAccount());
+            ticket.setName(user.getName());
 
-                List<BsPermission> permissions =  permissionService.getListBySysNoList(authorizeSysNoList);
-                if(null!=permissions && permissions.size()>0){
-                    List<String> permissionsCode = new ArrayList<String>();
-                    for (BsPermission permission:permissions) {
-                        permissionsCode.add(permission.getCode());
-                    }
-                    ticketUser.setPermissionsCode(permissionsCode);
-                }
-            }
-            ehcacheService.put("userAuth","ticket",JsonUtil.objToJson(ticketUser));
-            CookieUtil.setCookie(response,"userSysNo",user.getSysno().toString(),24*60*60,null);
-            CookieUtil.setCookie(response,"ticket", JsonUtil.objToJson(ticketUser),24*60*60,null);
+            String ticketMd5 = MD5Util.md5Password(JsonUtil.objToJson(ticket));
+
+            CookieUtil.setCookie(response,"sysno",user.getSysno().toString(),24*60*60,null);
+            CookieUtil.setCookie(response,"ticket", ticketMd5,24*60*60,null);
 
             result.setStatus(true);
             result.setMessage("登录成功");
@@ -118,7 +101,8 @@ public class AccountController {
 
     /**
      * 退出
-     * @return
+     * @return view
+     * @author 苟治国 创建
      */
     @RequestMapping("/timeout")
     public String timeout(){

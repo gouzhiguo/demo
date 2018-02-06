@@ -2,15 +2,21 @@ package demo.service.impl.bs;
 
 import com.github.pagehelper.Page;
 import demo.core.EasyMapperUtil;
+import demo.dao.bs.AuthorizeMapper;
+import demo.dao.bs.PermissionMapper;
 import demo.dao.bs.UserMapper;
 import demo.dao.bs.UserRoleMapper;
 import demo.model.JResult;
+import demo.model.para.bs.AuthorizePara;
 import demo.model.para.bs.SaveUserPara;
 import demo.model.para.bs.UpdatePassWordPara;
 import demo.model.para.bs.UserQueryPara;
+import demo.model.table.bs.BsAuthorize;
+import demo.model.table.bs.BsPermission;
 import demo.model.table.bs.BsUser;
 import demo.model.table.bs.BsUserRole;
 import demo.service.interfaces.bs.UserService;
+import demo.service.interfaces.core.EhcacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -31,10 +37,16 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
     @Autowired
     private UserRoleMapper userRoleMapper;
-
+    @Autowired
+    private AuthorizeMapper authorizeMapper;
+    @Autowired
+    private PermissionMapper permissionMapper;
+    @Autowired
+    private EhcacheService ehcacheService;
     /**
      * 获取用户(https://www.cnblogs.com/coprince/p/5984816.html)
      * @param sysNo 系统编号
+     * @author 苟治国
      */
     public BsUser get(Integer sysNo){
         return userMapper.get(sysNo);
@@ -46,6 +58,60 @@ public class UserServiceImpl implements UserService {
 
         Long timestamp = System.currentTimeMillis();
         return timestamp.toString();
+    }
+
+    /**
+     * 用户登录
+     * @param account
+     * @param password
+     * @throws Exception
+     * @author 苟治国
+     */
+    public BsUser login(String account,String password) throws Exception{
+
+        BsUser user = this.getByAccount(account);
+        if(null==user){
+            throw new Exception("用户不存在");
+        }
+
+
+        return user;
+    }
+
+    /**
+     * 获取用户权限
+     * @param userSysNo
+     * @throws Exception
+     */
+    public List<String> getPermissionCode(Integer userSysNo){
+
+        BsUser user = this.get(userSysNo);
+        if(null==user){
+            //throw new Exception("用户不存在");
+        }
+
+        List<String> permissionsCode = new ArrayList<String>();
+        //获取授权
+        AuthorizePara authorizePara = new AuthorizePara();
+        authorizePara.setUserSysNo(user.getSysno());
+        authorizePara.setRoleStatus(1);
+        authorizePara.setAuthorizeType(20);
+        List<BsAuthorize> authorizes = authorizeMapper.getAuthorize(authorizePara);
+
+        if(null!=authorizes && authorizes.size()>0){
+            //获取功能权限
+            List<Integer> authorizeSysNoList = new ArrayList<Integer>();
+            for (BsAuthorize item:authorizes) {
+                authorizeSysNoList.add(item.getAuthorizesysno());
+            }
+            List<BsPermission> permissions =  permissionMapper.getListBySysNoList(authorizeSysNoList);
+            if(null!=permissions && permissions.size()>0){
+                for (BsPermission permission:permissions) {
+                    permissionsCode.add(permission.getCode());
+                }
+            }
+        }
+        return permissionsCode;
     }
 
     //@CacheEvict(value="myCache", key="'get'+#userNo")

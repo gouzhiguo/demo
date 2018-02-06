@@ -9,6 +9,8 @@ import net.sf.ehcache.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 缓存业务接口实现
  *
@@ -31,6 +33,39 @@ public class EhcacheServiceImpl implements EhcacheService {
         Cache cache = cacheManager.getCache(cacheName);
         Element element = cache.get(key);
         return element == null ? null : element.getObjectValue();
+    }
+
+    /**
+     * 获取缓存
+     * @param cacheName
+     * @param key
+     * @param value
+     * @return
+     */
+    public Object get(String cacheName, String key,String value)
+    {
+        Cache cache = cacheManager.getCache(cacheName);
+        Element element = cache.get(key);
+        if(element==null){
+            //写入缓存
+            cache.put(new Element(key,value));
+
+            return value;
+        }else{
+            return element.getObjectValue();
+        }
+    }
+
+    /**
+     * 是否存在
+     * @param cacheName
+     * @param key
+     * @return
+     */
+    public boolean exist(String cacheName, String key){
+        Cache cache = cacheManager.getCache(cacheName);
+        Element element = cache.get(key);
+        return element == null ? true : false;
     }
 
     /**
@@ -71,19 +106,19 @@ public class EhcacheServiceImpl implements EhcacheService {
      * 获取用户票据
      * @return
      */
-    public TicketUser getTicketUser(){
+    public List<String> getTicketUser(){
 
-        TicketUser  ticketUser = null;
+        List<String> ticket = null;
 
         try {
-            Object ticket = this.get("userAuth","ticket");
-            if(ticket!=null){
-                ticketUser = JsonUtil.jsonToObj(ticket.toString(),TicketUser.class);
+            Object object = this.get("userAuth","ticket");
+            if(object!=null){
+                ticket = JsonUtil.jsonToListObj(object.toString(),String.class);
             }
         }catch (Exception ex){
             ex.printStackTrace();
         }
 
-        return ticketUser;
+        return ticket;
     }
 }

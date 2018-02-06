@@ -1,17 +1,20 @@
 package demo.admin.controller;
 
+import demo.core.ConfigUtil;
 import demo.core.CookieUtil;
 import demo.core.EhcacheUtil;
 import demo.core.JsonUtil;
 import demo.model.config.Sign;
 import demo.service.interfaces.bs.UserService;
 import demo.service.interfaces.core.EhcacheService;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @Controller
 @RequestMapping("home")
@@ -38,6 +41,11 @@ public class HomeController extends BaseController {
         //BsUser user = userService.get(1);
 
         try {
+
+            String configMap = ConfigUtil.get("redis.properties","host");
+
+
+            //ConfigUtil.
 
             //System.out.println(EhcacheUtil.getAuth("111"));
             String s = "{\"name\":\"liuzhao\"}";

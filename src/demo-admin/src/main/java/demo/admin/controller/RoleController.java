@@ -1,6 +1,8 @@
 package demo.admin.controller;
 
 import com.github.pagehelper.Page;
+import demo.auth.AuthCode;
+import demo.auth.CheckAuth;
 import demo.model.JResult;
 import demo.model.enums.StatusEnum;
 import demo.model.para.auth.RoleQueryPara;
@@ -35,22 +37,10 @@ public class RoleController {
      * @author 苟治国 创建
      */
     @RequestMapping("index")
+    @CheckAuth(authCode= {AuthCode.Role0001})
     public String index(Model model){
         model.addAttribute("statusEnum", StatusEnum.getStatusMap());
         return "role/role";
-    }
-
-    /**
-     * 更新状态
-     * @param sysNo
-     * @param status
-     * @return JResult
-     * @author 苟治国 创建
-     */
-    @RequestMapping(value = "updateRoleStatus",method = {RequestMethod.GET})
-    @ResponseBody
-    public JResult updateRoleStatus(@RequestParam(value = "sysNo") Integer sysNo, @RequestParam("status") Integer status){
-        return roleService.updateStatus(sysNo,status);
     }
 
     /**
@@ -59,6 +49,7 @@ public class RoleController {
      * @author 苟治国 创建
      */
     @RequestMapping("indexQuery")
+    @CheckAuth(authCode= {AuthCode.Role0001})
     public String indexQuery(RoleQueryPara para, HttpServletRequest request, Model model){
 
         para.setPageIndex(Integer.parseInt(request.getParameter("pageIndex")));
@@ -71,12 +62,27 @@ public class RoleController {
     }
 
     /**
+     * 更新状态
+     * @param sysNo
+     * @param status
+     * @return JResult
+     * @author 苟治国 创建
+     */
+    @RequestMapping(value = "updateRoleStatus",method = {RequestMethod.GET})
+    @ResponseBody
+    @CheckAuth(authCode= {AuthCode.Role0003})
+    public JResult updateRoleStatus(@RequestParam(value = "sysNo") Integer sysNo, @RequestParam("status") Integer status){
+        return roleService.updateStatus(sysNo,status);
+    }
+
+    /**
      * 修改
      * @param sysNo
      * @return view
      * @author 苟治国 创建
      */
     @RequestMapping("roleEdit")
+    @CheckAuth(authCode= {AuthCode.Role0002})
     public String roleEdit(Integer sysNo,Model model){
 
         BsRole role = null;
@@ -93,12 +99,13 @@ public class RoleController {
 
     /**
      * 保存
-     * @param role SaveRolePara
+     * @param para SaveRolePara
      * @return JResult @RequestBody AuthorizePara[] authorize
      * @author 苟治国 创建
      */
     @RequestMapping(value = "roleSave",method = {RequestMethod.POST})
     @ResponseBody
+    @CheckAuth(authCode= {AuthCode.Role0002})
     public JResult roleSave(SaveRolePara para)
     {
         JResult result = new JResult();

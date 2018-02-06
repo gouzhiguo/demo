@@ -1,6 +1,8 @@
 package demo.admin.controller;
 
 import com.github.pagehelper.Page;
+import demo.auth.AuthCode;
+import demo.auth.CheckAuth;
 import demo.model.JResult;
 import demo.model.enums.StatusEnum;
 import demo.model.para.auth.PermissionSavePara;
@@ -36,6 +38,7 @@ public class PermissionController {
      * @author 苟治国 创建
      */
     @RequestMapping("index")
+    @CheckAuth(authCode= {AuthCode.Permission0001})
     public String index(Model model){
         model.addAttribute("statusEnum", StatusEnum.getStatusMap());
         return "permission/index";
@@ -48,6 +51,7 @@ public class PermissionController {
      * @author 苟治国 创建
      */
     @RequestMapping("indexQuery")
+    @CheckAuth(authCode= {AuthCode.Permission0001})
     public String indexQuery(PermissionQueryPara para, HttpServletRequest request, Model model){
 
         para.setPageIndex(Integer.parseInt(request.getParameter("pageIndex")));
@@ -67,6 +71,7 @@ public class PermissionController {
      * @author 苟治国 创建
      */
     @RequestMapping("permissionEdit")
+    @CheckAuth(authCode= {AuthCode.Permission0002})
     public String permissionEdit(Integer sysNo,Model model){
 
         BsPermission permission = null;
@@ -89,6 +94,7 @@ public class PermissionController {
      */
     @RequestMapping(value = "permissionEdit",method = {RequestMethod.POST})
     @ResponseBody
+    @CheckAuth(authCode= {AuthCode.Permission0002})
     public JResult permissionEdit(PermissionSavePara para){
         return permissionService.save(para);
     }
@@ -102,6 +108,7 @@ public class PermissionController {
      */
     @RequestMapping(value = "updatePermissionStatus",method = {RequestMethod.GET})
     @ResponseBody
+    @CheckAuth(authCode= {AuthCode.Permission0003})
     public JResult updatePermissionStatus(@RequestParam(value = "sysNo") Integer sysNo, @RequestParam("status") Integer status){
         return permissionService.UpdateStatus(sysNo,status);
     }
